@@ -1,0 +1,37 @@
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+" Syntastic extension Setup
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+"let g:syntastic_check_on_open=1
+let g:syntastic_python_checker="flake8"
+
+" automatically open/close pane when errors (or not)
+let g:syntastic_auto_loc_list = 1
+" Redefine errors/warning symbols on sidebar
+let g:syntastic_error_symbol = 'EE'
+let g:syntastic_style_error_symbol = 'ee'
+let g:syntastic_warning_symbol = 'WW'
+let g:syntastic_style_warning_symbol = 'Ws'
+let g:syntastic_python_checker_args='--ignore=E127,E128,E501'
+
+
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+" CtrlP extension Setup
+"
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+
+" Change default key
+let g:ctrlp_map = '<c-o>'
+" Match window height
+let g:ctrlp_max_height = 20
+" Add a key to search in opened buffers
+map <c-b> :CtrlPBuffer<cr>
+
+" deactivate pymode lint function
+let g:pymode_lint = 0
+
+map <C-g> :GundoToggle<cr>
+
+if !empty($VIM_PROJECT_DIR)
+    execute 'set tags=' . $VIM_PROJECT_DIR . '/tags'
+endif
+
