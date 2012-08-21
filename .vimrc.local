@@ -35,3 +35,65 @@ if !empty($VIM_PROJECT_DIR)
     execute 'set tags=' . $VIM_PROJECT_DIR . '/tags'
 endif
 
+
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+" Indentation made easy
+"
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+
+vmap > >gv
+vmap < <gv
+
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+" Project environment
+"
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+let g:vim_project_file_name = '.vim_project'
+
+function! GetSubPaths()
+    let sep = '&'
+    let paths = ''
+    let curdir = expand('%:p:h')
+    while curdir != '/'
+        let paths = paths . sep . curdir
+        let curdir = fnamemodify(curdir, ':h')
+    endwhile
+    let paths = paths . sep . '/'
+    return split(paths, sep)
+endfunction
+
+function! GetVimProjectDir()
+    let projectdir = ''
+    let subpaths = GetSubPaths()
+    let length = len(subpaths)
+    let i = 0
+    while i < length && projectdir == ''
+        if subpaths[i] == '/'
+            let projectfile = '/' . g:vim_project_file_name
+        else
+            let projectfile = subpaths[i] . '/' . g:vim_project_file_name
+        endif
+        if filereadable(projectfile)
+            let projectdir = subpaths[i]
+        endif
+        let i = i + 1
+    endwhile
+    if projectdir == ''
+        let projectdir = getcwd()
+    endif
+    return projectdir
+endfunction
+
+let g:vim_project_dir = GetVimProjectDir()
+let g:vim_project_file = vim_project_dir . '/' . vim_project_file_name
+
+execute 'set tags=' . g:vim_project_dir . '/tags'
+
+if has('autocmd')
+    execute "autocmd BufRead " . g:vim_project_file_name . " set filetype=vim"
+endif
+
+if filereadable(g:vim_project_file)
+    execute 'source ' . g:vim_project_file
+endif
+
