@@ -20,9 +20,7 @@ for i in $HOME/.vim $HOME/.vimrc $HOME/.gvimrc; do [ -e $i ] && mv $i $i.$today;
 
 
 echo "cloning spf13-vim\n"
-git clone --recursive -b 3.0 http://github.com/delvin/spf13-vim.git $endpath
-cd $endpath
-git checkout -b delvin origin/delvin
+git clone --recursive -b delvin https://github.com/delv1n/spf13-vim.git $endpath
 mkdir -p $endpath/.vim/bundle
 ln -s $endpath/.vimrc $HOME/.vimrc
 ln -s $endpath/.vim $HOME/.vim
