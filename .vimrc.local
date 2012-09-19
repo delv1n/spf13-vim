@@ -31,10 +31,6 @@ let g:pymode_lint = 0
 
 map <C-g> :GundoToggle<cr>
 
-if !empty($VIM_PROJECT_DIR)
-    execute 'set tags=' . $VIM_PROJECT_DIR . '/tags'
-endif
-
 
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " Indentation made easy
@@ -97,3 +93,15 @@ if filereadable(g:vim_project_file)
     execute 'source ' . g:vim_project_file
 endif
 
+"""
+" Pymode configuration
+"""
+
+let g:pymode_virtualenv = 1
+let g:pymode_rope_auto_project = 1
+"let s:curdir = getcwd()
+"execute 'cd '. g:vim_project_dir
+"let s:toto = RopeChangeSignature()RopeOpenProject()
+"execute 'cd ' . s:curdir
+
+"call Ropevim.open_project('' . g:vim_project_dir)

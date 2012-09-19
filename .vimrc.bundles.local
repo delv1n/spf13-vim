@@ -2,6 +2,6 @@
 let g:spf13_bundle_groups=['general', 'programming', 'python']
 
 
-
+Bundle 'AutoTag'
 Bundle 'Gundo'
 
