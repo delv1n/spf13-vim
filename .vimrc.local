@@ -29,8 +29,17 @@ map <c-b> :CtrlPBuffer<cr>
 " deactivate pymode lint function
 let g:pymode_lint = 0
 
-map <C-g> :GundoToggle<cr>
+let g:ctrlp_custom_ignore = {
+    \'dir': '\v[\/]\.(git|hg|svn)$',
+    \'file': '\v\.(pyc)$',
+    \}
 
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+" Gundo configuration
+"
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+
+map <C-g> :GundoToggle<cr>
 
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " Indentation made easy
