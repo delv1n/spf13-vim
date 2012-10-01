@@ -11,33 +11,43 @@ die() {
     exit 1
 }
 
-echo "thanks for installing spf13-vim\n"
+lnif() {
+    if [ ! -e $2 ] ; then
+        ln -s $1 $2
+    fi
+}
+
+echo "Thanks for installing spf13-vim\n"
 
 # Backup existing .vim stuff
 echo "backing up current vim config\n"
 today=`date +%Y%m%d`
-for i in $HOME/.vim $HOME/.vimrc $HOME/.gvimrc; do [ -e $i ] && mv $i $i.$today; done
+for i in $HOME/.vim $HOME/.vimrc $HOME/.gvimrc; do [ -e $i ] && [ ! -L $file ] && mv $i $i.$today; done
 
 
-echo "cloning spf13-vim\n"
-git clone --recursive -b delvin https://github.com/delv1n/spf13-vim.git $endpath
-mkdir -p $endpath/.vim/bundle
-ln -s $endpath/.vimrc $HOME/.vimrc
-ln -s $endpath/.vim $HOME/.vim
-
-if [ -e $endpath/.vimrc.local ]
-then
-    ln -s $endpath/.vimrc.local $HOME/.vimrc.local
+if [ ! -e $endpath/.git ]; then
+    echo "cloning spf13-vim\n"
+    git clone --recursive -b delvin https://github.com/delv1n/spf13-vim.git $endpath
+else
+    echo "updating spf13-vim\n"
+    cd $endpath && git pull
 fi
 
-if [ -e $endpath/.vimrc.bundles.local ]
-then
-    ln -s $endpath/.vimrc.bundles.local $HOME/.vimrc.bundles.local
+echo "setting up symlinks"
+lnif $endpath/.vimrc $HOME/.vimrc
+lnif $endpath/.vimrc.bundles $HOME/.vimrc.bundles
+lnif $endpath/.vim $HOME/.vim
+if [ ! -d $endpath/.vim/bundle ]; then
+    mkdir -p $endpath/.vim/bundle
 fi
 
+lnif $endpath/.vimrc.local $HOME/.vimrc.local
+lnif $endpath/.vimrc.bundles.local $HOME/.vimrc.bundles.local
 
-echo "Installing Vundle"
-git clone http://github.com/gmarik/vundle.git $HOME/.vim/bundle/vundle
+if [ ! -e $HOME/.vim/bundle/vundle ]; then
+    echo "Installing Vundle"
+    git clone http://github.com/gmarik/vundle.git $HOME/.vim/bundle/vundle
+fi
 
-echo "installing plugins using Vundle"
-vim +BundleInstall! +BundleClean +q
+echo "update/install plugins using Vundle"
+vim -u $endpath/.vimrc.bundles - +BundleInstall! +BundleClean +qall

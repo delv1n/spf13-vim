@@ -30,7 +30,8 @@
     " }
     "
     " Setup Bundle Support {
-    " The next two lines ensure that the ~/.vim/bundle/ system works
+    " The next three lines ensure that the ~/.vim/bundle/ system works
+        filetype off
         set rtp+=~/.vim/bundle/vundle
         call vundle#rc()
     " }
@@ -38,112 +39,21 @@
 " }
 
 " Bundles {
-    " Deps
-        Bundle 'gmarik/vundle'
-        Bundle 'MarcWeber/vim-addon-mw-utils'
-        Bundle 'tomtom/tlib_vim'
-        if executable('ack-grep')
-            let g:ackprg="ack-grep -H --nocolor --nogroup --column"
-            Bundle 'mileszs/ack.vim'
-        elseif executable('ack')
-            Bundle 'mileszs/ack.vim'
-        endif
-
     " Use local bundles if available {
         if filereadable(expand("~/.vimrc.bundles.local"))
             source ~/.vimrc.bundles.local
         endif
     " }
-
-    " In your .vimrc.bundles.local file"
-    " list only the plugin groups you will use
-    if !exists('g:spf13_bundle_groups')
-        let g:spf13_bundle_groups=['general', 'programming', 'php', 'ruby', 'python', 'javascript', 'html', 'misc']
-    endif
-
-    " To override all the included bundles, put
-    " g:override_spf13_bundles = 1
-    " in your .vimrc.bundles.local file"
-    if !exists("g:override_spf13_bundles")
-
-    " General
-        if count(g:spf13_bundle_groups, 'general')
-            Bundle 'scrooloose/nerdtree'
-            Bundle 'altercation/vim-colors-solarized'
-            Bundle 'spf13/vim-colors'
-            Bundle 'tpope/vim-surround'
-            Bundle 'AutoClose'
-            Bundle 'kien/ctrlp.vim'
-            Bundle 'vim-scripts/sessionman.vim'
-            Bundle 'matchit.zip'
-            Bundle 'Lokaltog/vim-powerline'
-            Bundle 'Lokaltog/vim-easymotion'
-            Bundle 'godlygeek/csapprox'
-            Bundle 'jistr/vim-nerdtree-tabs'
-            Bundle 'flazz/vim-colorschemes'
-            Bundle 'corntrace/bufexplorer'
+    " Use fork bundles if available {
+        if filereadable(expand("~/.vimrc.bundles.fork"))
+            source ~/.vimrc.bundles.fork
         endif
-
-    " General Programming
-        if count(g:spf13_bundle_groups, 'programming')
-            " Pick one of the checksyntax, jslint, or syntastic
-            Bundle 'scrooloose/syntastic'
-            Bundle 'garbas/vim-snipmate'
-            Bundle 'spf13/snipmate-snippets'
-            " Source support_function.vim to support snipmate-snippets.
-            if filereadable(expand("~/.vim/bundle/snipmate-snippets/snippets/support_functions.vim"))
-                source ~/.vim/bundle/snipmate-snippets/snippets/support_functions.vim
-            endif
-
-            Bundle 'tpope/vim-fugitive'
-            Bundle 'scrooloose/nerdcommenter'
-            Bundle 'godlygeek/tabular'
-            if executable('ctags')
-                Bundle 'majutsushi/tagbar'
-            endif
-            Bundle 'Shougo/neocomplcache'
+    " }
+    " Use bundles config {
+        if filereadable(expand("~/.vimrc.bundles"))
+            source ~/.vimrc.bundles
         endif
-
-    " PHP
-        if count(g:spf13_bundle_groups, 'php')
-            Bundle 'spf13/PIV'
-        endif
-
-    " Python
-        if count(g:spf13_bundle_groups, 'python')
-            " Pick either python-mode or pyflakes & pydoc
-            Bundle 'klen/python-mode'
-            Bundle 'python.vim'
-            Bundle 'python_match.vim'
-            Bundle 'pythoncomplete'
-        endif
-
-    " Javascript
-        if count(g:spf13_bundle_groups, 'javascript')
-            Bundle 'leshill/vim-json'
-            Bundle 'groenewege/vim-less'
-            Bundle 'taxilian/vim-web-indent'
-        endif
-
-    " HTML
-        if count(g:spf13_bundle_groups, 'html')
-            Bundle 'amirh/HTML-AutoCloseTag'
-            Bundle 'ChrisYip/Better-CSS-Syntax-for-Vim'
-        endif
-
-    " Ruby
-        if count(g:spf13_bundle_groups, 'ruby')
-            Bundle 'tpope/vim-rails'
-        endif
-
-    " Misc
-        if count(g:spf13_bundle_groups, 'misc')
-            Bundle 'spf13/vim-markdown'
-            Bundle 'spf13/vim-preview'
-            Bundle 'tpope/vim-cucumber'
-            Bundle 'Puppet-Syntax-Highlighting'
-        endif
-    endif
+    " }
 " }
 
 " General {
@@ -155,8 +65,14 @@
     syntax on                   " syntax highlighting
     set mouse=a                 " automatically enable mouse usage
     scriptencoding utf-8
-    autocmd BufEnter * if bufname("") !~ "^\[A-Za-z0-9\]*://" | lcd %:p:h | endif
-    " always switch to the current file directory.
+
+    " Most prefer to automatically switch to the current file directory when
+    " a new buffer is opened; to prevent this behavior, add
+    " let g:spf13_no_autochdir = 1 to your .vimrc.bundles.local file
+    if !exists('g:spf13_no_autochdir')
+        autocmd BufEnter * if bufname("") !~ "^\[A-Za-z0-9\]*://" | lcd %:p:h | endif
+        " always switch to the current file directory.
+    endif
 
     " set autowrite                  " automatically write a file when leaving a modified buffer
     set shortmess+=filmnrxoOtT      " abbrev. of messages (avoids 'hit enter')
@@ -173,18 +89,24 @@
             set undolevels=1000         "maximum number of changes that can be undone
             set undoreload=10000        "maximum number lines to save for undo on a buffer reload
         endif
+
+    " To disable views set
+    " g:spf13_no_views = 1
+    " in your .vimrc.bundles.local file"
+    if !exists('g:spf13_no_views')
         " Could use * rather than *.*, but I prefer to leave .files unsaved
         au BufWinLeave *.* silent! mkview  "make vim save view (state) (folds, cursor, etc)
         au BufWinEnter *.* silent! loadview "make vim load view (state) (folds, cursor, etc)
+    endif
     " }
 " }
 
 " Vim UI {
     if filereadable(expand("~/.vim/bundle/vim-colors-solarized/colors/solarized.vim"))
+        let g:solarized_termcolors=256
         color solarized                 " load a colorscheme
     endif
         let g:solarized_termtrans=1
-        let g:solarized_termcolors=256
         let g:solarized_contrast="high"
         let g:solarized_visibility="high"
     set tabpagemax=15               " only show 15 tabs
@@ -244,16 +166,19 @@
     "set comments=sl:/*,mb:*,elx:*/  " auto format comment blocks
     " Remove trailing whitespaces and ^M chars
     autocmd FileType c,cpp,java,php,javascript,python,twig,xml,yml autocmd BufWritePre <buffer> :call setline(1,map(getline(1,"$"),'substitute(v:val,"\\s\\+$","","")'))
+    autocmd BufNewFile,BufRead *.html.twig set filetype=html.twig
 " }
 
 " Key (re)Mappings {
 
     "The default leader is '\', but many people prefer ',' as it's in a standard
-    "location
-    let mapleader = ','
-
-    " Making it so ; works like : for commands. Saves typing and eliminates :W style typos due to lazy holding shift.
-    nnoremap ; :
+    "location. To override this behavior and set it back to '\' (or any other
+    "character) add let g:spf13_leader='\' in your .vimrc.bundles.local file
+    if !exists('g:spf13_leader')
+        let mapleader = ','
+    else
+        let mapleader=g:spf13_leader
+    endif
 
     " Easier moving in tabs and windows
     map <C-J> <C-W>j<C-W>_
@@ -267,16 +192,30 @@
 
     " The following two lines conflict with moving to top and bottom of the
     " screen
-    " If you prefer that functionality, comment them out.
-    map <S-H> gT
-    map <S-L> gt
+    " If you prefer that functionality, add let g:spf13_no_fastTabs = 1 in
+    " your .vimrc.bundles.local file
+
+    if !exists('g:spf13_no_fastTabs')
+        map <S-H> gT
+        map <S-L> gt
+    endif
 
     " Stupid shift key fixes
-    cmap W w
-    cmap WQ wq
-    cmap wQ wq
-    cmap Q q
-    cmap Tabe tabe
+    if !exists('g:spf13_no_keyfixes')
+        if has("user_commands")
+            command! -bang -nargs=* -complete=file E e<bang> <args>
+            command! -bang -nargs=* -complete=file W w<bang> <args>
+            command! -bang -nargs=* -complete=file Wq wq<bang> <args>
+            command! -bang -nargs=* -complete=file WQ wq<bang> <args>
+            command! -bang Wa wa<bang>
+            command! -bang WA wa<bang>
+            command! -bang Q q<bang>
+            command! -bang QA qa<bang>
+            command! -bang Qa qa<bang>
+        endif
+
+        cmap Tabe tabe
+    endif
 
     " Yank from the cursor to the end of the line, to be consistent with C and D.
     nnoremap Y y$
@@ -393,8 +332,10 @@
         let NERDTreeIgnore=['\.pyc', '\~$', '\.swo$', '\.swp$', '\.git', '\.hg', '\.svn', '\.bzr']
         let NERDTreeChDirMode=0
         let NERDTreeQuitOnOpen=1
+        let NERDTreeMouseMode=2
         let NERDTreeShowHidden=1
         let NERDTreeKeepTreeInNewTab=1
+        let g:nerdtree_tabs_open_on_gui_startup=0
     " }
 
     " Tabularize {
@@ -482,32 +423,46 @@
         let g:neocomplcache_enable_underbar_completion = 1
         let g:neocomplcache_min_syntax_length = 3
         let g:neocomplcache_enable_auto_delimiter = 1
+        let g:neocomplcache_max_list = 15
+        let g:neocomplcache_auto_completion_start_length = 3
+        let g:neocomplcache_force_overwrite_completefunc = 1
+        let g:neocomplcache_snippets_dir='~/.vim/bundle/snipmate-snippets/snippets'
 
         " AutoComplPop like behavior.
         let g:neocomplcache_enable_auto_select = 0
 
         " SuperTab like snippets behavior.
-        imap <expr><TAB> neocomplcache#sources#snippets_complete#expandable() ? "\<Plug>(neocomplcache_snippets_expand)" : pumvisible() ? "\<C-n>" : "\<TAB>"
+        imap  <silent><expr><tab>  neocomplcache#sources#snippets_complete#expandable() ? "\<plug>(neocomplcache_snippets_expand)" : (pumvisible() ? "\<c-e>" : "\<tab>")
+        smap  <tab>  <right><plug>(neocomplcache_snippets_jump) 
 
         " Plugin key-mappings.
+        " Ctrl-k expands snippet & moves to next position
+        " <CR> chooses highlighted value
         imap <C-k>     <Plug>(neocomplcache_snippets_expand)
         smap <C-k>     <Plug>(neocomplcache_snippets_expand)
-        inoremap <expr><C-g>     neocomplcache#undo_completion()
-        inoremap <expr><C-l>     neocomplcache#complete_common_string()
+        inoremap <expr><C-g>   neocomplcache#undo_completion()
+        inoremap <expr><C-l>   neocomplcache#complete_common_string()
+        inoremap <expr><CR>    neocomplcache#complete_common_string()
 
 
         " <CR>: close popup
         " <s-CR>: close popup and save indent.
+        inoremap <expr><s-CR> pumvisible() ? neocomplcache#close_popup()"\<CR>" : "\<CR>"
         inoremap <expr><CR>  pumvisible() ? neocomplcache#close_popup() : "\<CR>"
-        inoremap <expr><s-CR> pumvisible() ? neocomplcache#close_popup() "\<CR>" : "\<CR>"
+
         " <TAB>: completion.
         inoremap <expr><TAB>  pumvisible() ? "\<C-n>" : "\<TAB>"
+        inoremap <expr><s-TAB>  pumvisible() ? "\<C-p>" : "\<TAB>"
 
         " <C-h>, <BS>: close popup and delete backword char.
-        inoremap <expr><C-h> neocomplcache#smart_close_popup()."\<C-h>"
         inoremap <expr><BS> neocomplcache#smart_close_popup()."\<C-h>"
         inoremap <expr><C-y>  neocomplcache#close_popup()
-        inoremap <expr><C-e>  neocomplcache#cancel_popup()
+
+        " Define keyword.
+        if !exists('g:neocomplcache_keyword_patterns')
+          let g:neocomplcache_keyword_patterns = {}
+        endif
+        let g:neocomplcache_keyword_patterns['default'] = '\h\w*'
 
         " Enable omni completion.
         autocmd FileType css setlocal omnifunc=csscomplete#CompleteCSS
@@ -515,13 +470,13 @@
         autocmd FileType javascript setlocal omnifunc=javascriptcomplete#CompleteJS
         autocmd FileType python setlocal omnifunc=pythoncomplete#Complete
         autocmd FileType xml setlocal omnifunc=xmlcomplete#CompleteTags
+        autocmd FileType ruby setlocal omnifunc=rubycomplete#Complete
 
         " Enable heavy omni completion.
         if !exists('g:neocomplcache_omni_patterns')
             let g:neocomplcache_omni_patterns = {}
         endif
         let g:neocomplcache_omni_patterns.ruby = '[^. *\t]\.\h\w*\|\h\w*::'
-        "autocmd FileType ruby setlocal omnifunc=rubycomplete#Complete
         let g:neocomplcache_omni_patterns.php = '[^. \t]->\h\w*\|\h\w*::'
         let g:neocomplcache_omni_patterns.c = '\%(\.\|->\)\h\w*'
         let g:neocomplcache_omni_patterns.cpp = '\h\w*\%(\.\|->\)\h\w*\|\h\w*::'
@@ -533,6 +488,9 @@
 
      " }
 
+     " UndoTree {
+        nnoremap <c-u> :UndotreeToggle<CR>
+     " }
 
 " }
 
@@ -603,6 +561,11 @@ function! NERDTreeInitAsNeeded()
 endfunction
 " }
 
+" Use fork vimrc if available {
+    if filereadable(expand("~/.vimrc.fork"))
+        source ~/.vimrc.fork
+    endif
+" }
 " Use local vimrc if available {
     if filereadable(expand("~/.vimrc.local"))
         source ~/.vimrc.local
