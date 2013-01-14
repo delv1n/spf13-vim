@@ -7,5 +7,3 @@ Bundle 'AutoTag'
 Bundle 'Gundo'
 Bundle 'Shougo/vimproc'
 Bundle 'Shougo/vimshell'
-
-UnBundle 'myusuf3/numbers.vim'
