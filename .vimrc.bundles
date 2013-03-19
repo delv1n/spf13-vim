@@ -48,6 +48,9 @@
             Bundle 'mileszs/ack.vim'
         elseif executable('ack')
             Bundle 'mileszs/ack.vim'
+        elseif executable('ag')
+            Bundle 'mileszs/ack.vim'
+            let g:ackprg = 'ag --nogroup --nocolor --column'
         endif
 
     " Use local bundles if available {
@@ -92,6 +95,7 @@
             if !exists('g:spf13_no_views')
                 Bundle 'vim-scripts/restore_view.vim'
             endif
+            Bundle 'airblade/vim-gitgutter'
             Bundle 'tpope/vim-abolish.git'
         endif
 
@@ -126,6 +130,7 @@
     " PHP
         if count(g:spf13_bundle_groups, 'php')
             Bundle 'spf13/PIV'
+            Bundle 'arnaud-lb/vim-php-namespace'
         endif
 
     " Python
@@ -143,6 +148,7 @@
             Bundle 'groenewege/vim-less'
             Bundle 'pangloss/vim-javascript'
             Bundle 'briancollins/vim-jst'
+            Bundle 'kchmck/vim-coffee-script'
         endif
 
     " Java
@@ -155,6 +161,7 @@
         if count(g:spf13_bundle_groups, 'html')
             Bundle 'amirh/HTML-AutoCloseTag'
             Bundle 'hail2u/vim-css3-syntax'
+            Bundle 'tpope/vim-haml'
         endif
 
     " Ruby
