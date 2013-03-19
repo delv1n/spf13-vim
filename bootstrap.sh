@@ -46,9 +46,6 @@ if [ ! -d $endpath/.vim/bundle ]; then
     mkdir -p $endpath/.vim/bundle
 fi
 
-lnif $endpath/.vimrc.local $HOME/.vimrc.local
-lnif $endpath/.vimrc.bundles.local $HOME/.vimrc.bundles.local
-
 if [ ! -e $HOME/.vim/bundle/vundle ]; then
     echo "Installing Vundle"
     git clone http://github.com/gmarik/vundle.git $HOME/.vim/bundle/vundle
