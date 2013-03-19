@@ -121,7 +121,6 @@ if filereadable(g:vim_project_file)
     execute 'source ' . g:vim_project_file
 endif
 
-"""
-" Pymode configuration
-"""
-
+set nobackup
+set nowritebackup
+set noswapfile
