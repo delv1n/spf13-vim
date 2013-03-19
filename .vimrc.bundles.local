@@ -5,5 +5,3 @@ let g:spf13_bundle_groups=['general', 'neocomplcache', 'programming', 'python']
 
 Bundle 'AutoTag'
 Bundle 'Gundo'
-Bundle 'Shougo/vimproc'
-Bundle 'Shougo/vimshell'
