@@ -32,16 +32,26 @@ let g:syntastic_python_checker_args='--ignore=E127,E128,E501'
 let g:ctrlp_map = '<c-o>'
 " Match window height
 let g:ctrlp_max_height = 20
+
 " Add a key to search in opened buffers
 map <c-b> :CtrlPBuffer<cr>
-
-" deactivate pymode lint function
-let g:pymode_lint = 0
 
 let g:ctrlp_custom_ignore = {
     \'dir': '\v[\/]\.(git|hg|svn)$',
     \'file': '\v\.(pyc|png)$',
     \}
+
+
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+" python-mode configuration
+"
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+
+" deactivate pymode lint function
+let g:pymode_lint = 0
+
+let g:pymode_virtualenv = 1
+let g:pymode_rope_auto_project = 1
 
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " Gundo configuration
@@ -115,5 +125,3 @@ endif
 " Pymode configuration
 """
 
-let g:pymode_virtualenv = 1
-let g:pymode_rope_auto_project = 1
